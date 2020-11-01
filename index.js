@@ -3,16 +3,24 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+// const Redis = require('ioredis');
+const redis = require('redis');
 const keys = require('./config/keys');
+
+
 
 require('./models/User');
 require('./models/Blog');
 require('./services/passport');
+require('./services/cache');
+
 
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.mongoURI, { useMongoClient: true });
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
 
 const app = express();
+
+const client = redis.createClient({ password: 'secret'});
 
 app.use(bodyParser.json());
 app.use(
